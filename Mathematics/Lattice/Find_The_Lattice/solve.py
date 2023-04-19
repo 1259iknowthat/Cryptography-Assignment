@@ -1,0 +1,98 @@
+from Crypto.Util.number import getPrime, inverse, bytes_to_long, long_to_bytes
+import random
+import math
+
+class vector:
+	def __init__(self,array):
+		self.coordinate=array
+	def __str__(self):
+		#print(self.coordinate,type(self.coordinate))
+		return f"{self.coordinate}"
+	def __add__(a,b):
+		assert len(a) == len(b)
+		n=len(a)
+		return vector([a.coordinate[i] + b.coordinate[i] for i in range(n)])
+	def __sub__(a,b):
+		assert len(a) == len(b)
+		n=len(a)
+		return vector([a.coordinate[i] - b.coordinate[i] for i in range(n)])
+	def __mul__(self, other):
+		n=len(self)
+		if type(other) in [int,float]:
+			return vector([other*self.coordinate[i] for i in range(n)])
+	def __len__(self):
+		return len(self.coordinate)
+	def __getitem__(self,n):
+		return self.coordinate[n]
+	def inner(a,b):
+		#tich vo huong 2 vector
+		assert len(a) == len(b)
+		n=len(a)
+		res=0
+		for i in range(n):
+			res+=a.coordinate[i]*b.coordinate[i]
+		return res
+def Gauss(v1, v2):
+	while True:
+		if vector.inner(v2,v2) < vector.inner(v1,v1) : v1, v2 = v2, v1
+		m = math.floor(vector.inner(v1,v2) / vector.inner(v1,v1))
+		#print(m,v1,v2)
+		if m == 0 : return v1, v2
+		v2 = v2 - v1*m
+
+
+def gen_key():
+    q = getPrime(512)
+    upper_bound = int(math.sqrt(q // 2))
+    lower_bound = int(math.sqrt(q // 4))
+    f = random.randint(2, upper_bound)
+    while True:
+        g = random.randint(lower_bound, upper_bound)
+        if math.gcd(f, g) == 1:
+            break
+    h = (inverse(f, q)*g) % q
+    return (q, h), (f, g)
+    	
+def decrypt(q, h, f, g, e):
+    a = (f*e) % q
+    m = (a*inverse(f, g)) % g
+    return m
+    
+    
+
+
+fi=open("output.txt",'r')
+public=fi.readline().strip()
+enc=fi.readline().strip()
+enc=int(enc[15:])
+print(enc)
+public=public[13:-1].split(', ')
+q, h = public
+q=int(q)
+h=int(h)
+
+"""
+We need to find pair (f,g) satisfied fh = g (mod q)
+=> fh = g+k*q
+=> fh-kq = g
+=> f(1,h) - k(0,q) = (f,g)
+so 2 basis vecto is (1,h) and (0,q)
+"""
+
+v1=vector([1,h])
+v2=vector([0,q])
+
+u, v = Gauss(v1,v2)
+
+print(u,v)
+
+f=u[0]
+g=u[1]
+
+flag=decrypt(q, h, f, g, enc)
+print(long_to_bytes(flag))
+
+
+
+
+

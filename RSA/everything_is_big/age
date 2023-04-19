@@ -1,0 +1,36 @@
+[0;31mSignature:[0m     
+[0mVectorSpace[0m[0;34m([0m[0;34m[0m
+[0;34m[0m    [0mK[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mdimension_or_basis_keys[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0msparse[0m[0;34m=[0m[0;32mFalse[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0minner_product_matrix[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0;34m*[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mwith_basis[0m[0;34m=[0m[0;34m'standard'[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mdimension[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0mbasis_keys[0m[0;34m=[0m[0;32mNone[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m    [0;34m**[0m[0margs[0m[0;34m,[0m[0;34m[0m
+[0;34m[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;31mDocstring:[0m     
+   EXAMPLES:
+
+   The base can be complicated, as long as it is a field.
+
+      sage: V = VectorSpace(FractionField(PolynomialRing(ZZ,'x')),3)
+      sage: V
+      Vector space of dimension 3 over Fraction Field of Univariate Polynomial Ring in x over Integer Ring
+      sage: V.basis()
+      [
+      (1, 0, 0),
+      (0, 1, 0),
+      (0, 0, 1)
+      ]
+
+   The base must be a field or a "TypeError" is raised.
+
+      sage: VectorSpace(ZZ,5)
+      Traceback (most recent call last):
+      ...
+      TypeError: Argument K (= Integer Ring) must be a field.
+[0;31mInit docstring:[0m Initialize self.  See help(type(self)) for accurate signature.
+[0;31mFile:[0m           /usr/lib/python3/dist-packages/sage/modules/free_module.py
+[0;31mType:[0m           function
