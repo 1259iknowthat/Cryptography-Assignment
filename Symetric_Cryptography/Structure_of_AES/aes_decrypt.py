@@ -3,23 +3,6 @@ N_ROUNDS = 10
 key        = b'\xc3,\\\xa6\xb5\x80^\x0c\xdb\x8d\xa5z*\xb6\xfe\\'
 ciphertext = b'\xd1O\x14j\xa4+O\xb6\xa1\xc4\x08B)\x8f\x12\xdd'
 
-
-
-
-def bytes2matrix(text):
-    """ Converts a 16-byte array into a 4x4 matrix.  """
-    return [list(text[i:i+4]) for i in range(0, len(text), 4)]
-
-def matrix2bytes(matrix):
-    """ Converts a 4x4 matrix into a 16-byte array.  """
-    return bytes(sum(matrix, []))
-
-
-def add_round_key(s, k):
-    return [[a^b for a, b in zip(i, j)] for i, j in zip(s, k)]
-    
-
-
 s_box = (
     0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
     0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
@@ -58,12 +41,27 @@ inv_s_box = (
     0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D,
 )
 
+def bytes2matrix(lst):
+    """ Converts a 16-byte array into a 4x4 matrix.  """
+    return [list(lst[i:i+4]) for i in range(0, len(lst), 4)]
 
-def sub_bytes(s, sbox=s_box):
-    return [[sbox[i] for i in j] for j in s]
+def matrix2bytes(matrix):
+    """ Converts a 4x4 matrix into a 16-byte array.  """
+    data = ""
+    for i in range(4):
+        for j in range(4):
+            data += chr(matrix[i][j])
+    return data
 
+def add_round_key(s, k):
+    for i in range(4):
+        for j in range(4):
+            s[i][j] ^= k[i][j]
 
-
+def sub_bytes(s, inv_s_box):
+    for i in range(4):
+        for j in range(4):
+            s[i][j] = inv_s_box[s[i][j]]
 
 def shift_rows(s):
     s[0][1], s[1][1], s[2][1], s[3][1] = s[1][1], s[2][1], s[3][1], s[0][1]
@@ -72,10 +70,10 @@ def shift_rows(s):
 
 
 def inv_shift_rows(s):
-    s[0][1], s[1][1], s[2][1], s[3][1] = s[3][1], s[0][1], s[1][1], s[2][1]
-    s[0][2], s[1][2], s[2][2], s[3][2] = s[2][2], s[3][2], s[0][2], s[1][2]
-    s[0][3], s[1][3], s[2][3], s[3][3] = s[1][3], s[2][3], s[3][3], s[0][3]
-    
+    s[1][1], s[2][1], s[3][1], s[0][1] = s[0][1], s[1][1], s[2][1], s[3][1]
+    s[2][2], s[3][2], s[0][2], s[1][2] = s[0][2], s[1][2], s[2][2], s[3][2]
+    s[3][3], s[0][3], s[1][3], s[2][3] = s[0][3], s[1][3], s[2][3], s[3][3]       
+
 # learned from http://cs.ucsb.edu/~koc/cs178/projects/JT/aes.c
 xtime = lambda a: (((a << 1) ^ 0x1B) & 0xFF) if (a & 0x80) else (a << 1)
 
@@ -106,8 +104,6 @@ def inv_mix_columns(s):
         s[i][3] ^= v
 
     mix_columns(s)
-
-
 
 def expand_key(master_key):
     """
@@ -155,27 +151,28 @@ def expand_key(master_key):
 
 
 def decrypt(key, ciphertext):
+    state = [[0] * 4] * 4
     round_keys = expand_key(key) # Remember to start from the last round key and work backwards through them when decrypting
-    #print(round_keys)
-    round_keys=round_keys[::-1]
-    # Convert ciphertext to state matrix
-    state=bytes2matrix(ciphertext)
-    print(state)
+
+    # Convert cipherlst to state matrix
+    state = bytes2matrix(ciphertext)
+
     # Initial add round key step
-    state=add_round_key(state,round_keys[0])
+    add_round_key(state, round_keys[10])
+    
     for i in range(N_ROUNDS - 1, 0, -1):
-        #pass # Do round
         inv_shift_rows(state)
-        state=sub_bytes(state,sbox=inv_s_box)
-        state=add_round_key(state,round_keys[N_ROUNDS-i])
+        sub_bytes(state, inv_s_box)
+        add_round_key(state, round_keys[i])
         inv_mix_columns(state)
 
     # Run final round (skips the InvMixColumns step)
     inv_shift_rows(state)
-    state=sub_bytes(state, sbox=inv_s_box)
-    state=add_round_key(state,round_keys[N_ROUNDS])
-    # Convert state matrix to plaintext
-    plaintext=matrix2bytes(state)
+    sub_bytes(state, inv_s_box)
+    add_round_key(state, round_keys[0])
+    
+    # Convert state matrix to plainlst
+    plaintext = matrix2bytes(state)
     return plaintext
 
 
