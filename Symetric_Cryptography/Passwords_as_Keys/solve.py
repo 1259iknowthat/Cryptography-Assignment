@@ -1,29 +1,20 @@
 from Crypto.Cipher import AES
-import hashlib
+from hashlib import md5
+import requests, json
 
-def decrypt(ciphertext, password_hash):
-    ciphertext = bytes.fromhex(ciphertext)
-    key = bytes.fromhex(password_hash)
+r = requests.get('https://gist.githubusercontent.com/wchargin/8927565/raw/d9783627c731268fb2935a731a618aa8e95cf465/words')
+lst = r.content.decode().split('\n')
+# print(data.split('\n'))
+r = requests.get('https://aes.cryptohack.org/passwords_as_keys/encrypt_flag/')
+data = json.loads(r.content.decode())
+ct = bytes.fromhex(data['ciphertext'])
 
+
+for i in lst:
+    key = md5(i.strip().encode()).digest()
+    # print(key)
     cipher = AES.new(key, AES.MODE_ECB)
-    try:
-        decrypted = cipher.decrypt(ciphertext)
-    except ValueError as e:
-        return {"error": str(e)}
-
-    return {"plaintext": decrypted.hex()}
-
-
-ct="c92b7734070205bdf6c0087a751466ec13ae15e6f1bcdd3f3a535ec0f4bbae66"
-
-
-with open("words") as f:
-	words=[w.strip() for w in f.readlines()]
-
-for i in words:
-	pwd=hashlib.md5(i.encode()).hexdigest()
-	tmp=decrypt(ct,pwd)
-	ms=bytes.fromhex(tmp["plaintext"])
-	if b"crypto" in ms :
-		print(ms)
-
+    data = cipher.decrypt(ct)
+    if b'crypto' in data:
+        print("FOUND: {}".format(data))
+        break
