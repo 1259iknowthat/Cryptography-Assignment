@@ -1,58 +1,27 @@
-def xor(a,b):
-	a=bytes.fromhex(a)
-	b=bytes.fromhex(b)
-	return ''.join(list(chr(i^j) for i, j in zip(a,b)))
+from Crypto.Cipher import AES
+from pwn import *
 import requests
+import json
 
-base_url="https://aes.cryptohack.org"
+r1 = requests.get('https://aes.cryptohack.org/ecbcbcwtf/encrypt_flag/')
+data = json.loads(r1.content.decode())
+# print(data['ciphertext'])
+ct = bytes.fromhex(data['ciphertext'])
 
-r=requests.get(f"{base_url}/ecbcbcwtf/encrypt_flag")
-data=r.json()
-ct=data["ciphertext"]
-iv=ct[:32] #len iv = 16
-enc=ct[32:]
-print(ct)
-print(iv)
-print(enc,len(enc))
+r2 = requests.get('https://aes.cryptohack.org/ecbcbcwtf/decrypt/{}/'.format(ct.hex()))
 
-flag=""
+data = json.loads(r2.content.decode())
+# print(data)
+pt = bytes.fromhex(data['plaintext'])
 
-#lam nguoc (tu phai qua trai)
-k=len(enc)//32
-tmp=enc[32*(k-1):32*k]
-print(tmp,len(tmp))
-while (k > 1):
-	prev=enc[32*(k-2):32*(k-1)]
-	r=requests.get(f"{base_url}/ecbcbcwtf/decrypt/{tmp}")
-	data=r.json()
-	#print(data)
-	pt1=data["plaintext"]
-	flag=xor(pt1,prev)+flag
-	k-=1
-	tmp=prev
-#print(flag)
-prev=iv
-r=requests.get(f"{base_url}/ecbcbcwtf/decrypt/{tmp}")
-data=r.json()
-print(data)
-pt1=data["plaintext"]
-flag=xor(pt1,prev)+flag
-print(flag)
-
-"""
-#lam xuoi (tu trai qua phai)
-k=len(enc)//32
-tmp=enc[:32]
-r=requests.get(f"{base_url}/ecbcbcwtf/decrypt/{tmp}")
-data=r.json()
-pt1=data["plaintext"]
-flag=flag+xor(pt1,iv)
-for i in range(1,k):
-	current_iv=tmp
-	tmp=enc[32*i:32*(i+1)]
-	r=requests.get(f"{base_url}/ecbcbcwtf/decrypt/{tmp}")
-	data=r.json()
-	pt1=data["plaintext"]
-	flag=flag+xor(pt1,current_iv)
-print(flag)
-"""
+iv = ct[:16]
+ct1 = ct[16:32]
+# ct2 = ct[32:]
+pt1 = pt[16:32]
+pt2 = pt[32:]
+# print(len(pt1), len(pt2))
+# print(len(ct1))
+# print(len(iv))
+data1 = xor(iv, pt1)
+data2 = xor(ct1, pt2)
+print(data1+data2)
