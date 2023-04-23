@@ -1,37 +1,29 @@
-from binascii import *
-from Crypto.Util.Padding import pad, unpad
-from datetime import datetime, timedelta
-expires_at = (datetime.today() + timedelta(days=1)).strftime("%s")
-cookie = f"admin=False;expiry={expires_at}".encode()
-padded = pad(cookie, 16)
-print(cookie,len(cookie))
-print(padded,len(padded))
-
+from pwn import *
 import requests
+import json
 
-base_url="http://aes.cryptohack.org/flipping_cookie/"
 
-r=requests.get(f"{base_url}get_cookie")
-data=r.json()
-ct=data["cookie"]
-iv=ct[:32]
-enc=ct[32:]
-print(ct)
-print(iv)
-print(enc)
-print(3^2^2)
-fake_cookie=b"admin=True;expiry=000000"
+# ct =  bytes.fromhex("72c905b67a2edcc2a6b7d49e6ab7259f483593ebfd98f18dd80363c1777aef093b69c5740667cf1986d5d3ded1ec109b")
 
-tmp=iv
-tmp=bytes.fromhex(tmp)
-ls=[tmp[i] for i in range(16)]
-print(ls)
-for i in range(16):
-	ls[i]=ls[i]^cookie[i]^fake_cookie[i]
-print(ls)
-custom_iv=bytes(ls)
-custom_iv=custom_iv.hex()
-r=requests.get(f"{base_url}check_admin/{enc}/{custom_iv}")
-data=r.json()
-print(data)
+r = requests.get('https://aes.cryptohack.org/flipping_cookie/get_cookie/')
+data = json.loads(r.content.decode())
+ct = bytes.fromhex(data['cookie'])
 
+pt1 = b'admin=False;expi'
+iv = ct[:16]
+cookie = ct[16:]
+
+# print(iv.hex(), len(iv))
+# print(cookie.hex(), len(cookie))
+# print(pt1.decode())
+block = xor(pt1, iv)
+# print(block.hex(), len(block))
+
+fake_cookie = b'admin=True;;expi'
+iv_fake = xor(block, fake_cookie)
+# print(iv_fake, len(iv_fake))
+iv_fake = iv_fake.hex()
+# print(iv_fake, fake_cookie)
+r = requests.get('https://aes.cryptohack.org/flipping_cookie/check_admin/{}/{}/'.format(cookie.hex(), iv_fake))
+
+print(r.content)
