@@ -62,10 +62,11 @@ print(len(n))
 print(len(c))
 
 def check(n):
+	#this function for checking all modulus are co-prime with each other
 	for i in range(len(n)):
 		for j in range(i):
 			if gcd(n[i],n[j]) != 1: 
-				print("vcccc")
+				#print("vcccc")
 				return False
 	return True
 
@@ -86,19 +87,12 @@ for i in range(len(n)-2):
 			if tmp[1] == True:
 				print(tmp)
 				print(long_to_bytes(tmp[0]))
-				break
+				if b'crypto{' in long_to_bytes(tmp[0]): res.append(long_to_bytes(tmp[0]))
 			
 print(res)
 
-for i in range(len(n)):
-	tmp=iroot(c[i],e)
-	if tmp[1] == True:
-		print(tmp[0])
 
 
-"""
-Hint: not all message the same => padding message hastad attack
-"""
 
 
 
