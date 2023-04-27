@@ -1,5 +1,8 @@
 import random
 
+def long_to_bytes(s):
+	return s.to_bytes(1, 'big')
+
 def bytes_to_binary(s):
     bin_str = ''.join(format(b, '08b') for b in s)
     bits = [int(c) for c in bin_str]
@@ -43,6 +46,10 @@ def mod_inv(a,p):
 	gcd, u, v= egcd(a,p)
 	print(gcd, u ,v)
 	return u%p
+	
+def bin_to_bytes(s):
+    all_bytes = [s[i:i+8] for i in range(0, len(s), 8)]
+    return b''.join(long_to_bytes(int(byte, 2)) for byte in all_bytes)
 
 P = 2
 N = 50
@@ -52,17 +59,16 @@ A=load_matrix("flag.enc")
 print(A)
 
 g=multiplicative_order(A)
-y=mod_inv(E,g)
-print(y)
-mat=A^y
+D=mod_inv(E,g)
+print(D)
+mat=A^D
 
-mat=mat.transpose()
-print(mat)
-ls=[]
-for i in mat:
-	ls.append(i)
-print(ls,len(ls))
 
+cols = mat.columns()[:(34*8//50)+1]
+
+bin_flag = ''.join([str(bit) for col in cols for bit in col])
+
+print(bin_to_bytes(bin_flag))
 
 
 
