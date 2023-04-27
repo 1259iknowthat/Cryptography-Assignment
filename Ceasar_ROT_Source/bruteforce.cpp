@@ -4,21 +4,14 @@ using namespace std;
 
 string decode(string s, int shift){
     string result = "";
-    for (int i = 0; i < s.length(); i++) {
-        if(s[i] == 32) {
-            result += 32;
-            continue;
+        for (int i = 0; i < s.length(); i++) {
+            if (isupper(s[i]))
+                result += char(int(s[i] + shift - 65) % 26 + 65);
+            else if (islower(s[i]))
+                result += char(int(s[i] + shift - 97) % 26 + 97);
+            else    
+                result += s[i];
         }
-        if(s[i] >= '0' && s[i] <= '9'){
-            result += s[i];
-            continue;
-        }
-        
-        if (isupper(s[i]))
-            result += char(int(s[i] + shift - 65) % 26 + 65);
-        else
-            result += char(int(s[i] + shift - 97) % 26 + 97);
-    }
     return result;
 }
 
