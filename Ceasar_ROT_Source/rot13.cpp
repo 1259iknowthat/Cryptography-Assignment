@@ -36,9 +36,9 @@ class ROT{
             string result = "";
             for (int i = 0; i < this->s.length(); i++) {
                 if (isupper(this->s[i]))
-                    result += char(int(this->s[i] - this->shift - 65) % 26 + 65);
+                    result += char(int(this->s[i] - this->shift - 65 + 26) % 26 + 65);
                 else if (islower(this->s[i]))
-                    result += char(int(this->s[i] - this->shift - 97) % 26 + 97);
+                    result += char(int(this->s[i] - this->shift - 97 + 26) % 26 + 97);
                 else    
                     result += this->s[i];
             }
