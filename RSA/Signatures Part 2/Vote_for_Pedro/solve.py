@@ -19,9 +19,15 @@ n = 2226661665757498986810932425216066347092520769069409495331289128234142688050
 e = 3
 
 
+
+
+
+
+
 data={}
 data['option'] = "vote"
-data['vote'] = hex(855520592299350692515886317752220783) #
+data['vote'] = hex(855520592299350692515886317752220783)  
+#Compute using Sage x = (bytes_to_long(msg), 2^120).nth_root(e)
 r.sendline(json.dumps(data))
 
 data=json.loads(r.recvline())
@@ -33,7 +39,6 @@ print(e)
 print(data)
 
 r.close()
-
 
 
 
