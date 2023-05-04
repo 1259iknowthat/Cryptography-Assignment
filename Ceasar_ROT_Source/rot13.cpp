@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <sstream>
 using namespace std;
 
 class ROT{
@@ -21,11 +21,11 @@ class ROT{
 
         void encode(){
             string result = "";
-            for (int i = 0; i < this->s.length(); i++) {
+            for (size_t i = 0; i < this->s.length(); i++) {
                 if (isupper(this->s[i]))
-                    result += char(int(this->s[i] + this->shift - 65) % 26 + 65);
+                    result += (this->s[i] + this->shift - 'A') % 26 + 'A';
                 else if (islower(this->s[i]))
-                    result += char(int(this->s[i] + this->shift - 97) % 26 + 97);
+                    result += (this->s[i] + this->shift - 'a') % 26 + 'a';
                 else    
                     result += this->s[i];
             }
@@ -34,11 +34,11 @@ class ROT{
 
         void decode(){
             string result = "";
-            for (int i = 0; i < this->s.length(); i++) {
+            for (size_t i = 0; i < this->s.length(); i++) {
                 if (isupper(this->s[i]))
-                    result += char(int(this->s[i] - this->shift - 65 + 26) % 26 + 65);
+                    result += (this->s[i] - this->shift - 'A' + 26) % 26 + 'A';
                 else if (islower(this->s[i]))
-                    result += char(int(this->s[i] - this->shift - 97 + 26) % 26 + 97);
+                    result += (this->s[i] - this->shift - 'a' + 26) % 26 + 'a';
                 else    
                     result += this->s[i];
             }

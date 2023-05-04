@@ -1,0 +1,5 @@
+.gitgnore
+*.exe
+.vscode
+*.ilk
+*.pdb

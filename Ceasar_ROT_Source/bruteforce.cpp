@@ -1,14 +1,14 @@
 #include <iostream>
-
+#include <sstream>
 using namespace std;
 
-string decode(string s, int shift){
+string decode(string s, int8_t shift){
     string result = "";
-        for (int i = 0; i < s.length(); i++) {
+        for (size_t i = 0; i < s.length(); i++) {
             if (isupper(s[i]))
-                result += char(int(s[i] + shift - 65) % 26 + 65);
+                result += (s[i] + shift - 'A') % 26 + 'A';
             else if (islower(s[i]))
-                result += char(int(s[i] + shift - 97) % 26 + 97);
+                result += (s[i] + shift - 'a') % 26 + 'a';
             else    
                 result += s[i];
         }
@@ -17,7 +17,7 @@ string decode(string s, int shift){
 
 void bruteforce(string s){
     printf("Brute-force's output:\n");
-    for (int i = 0; i < 26; i++){
+    for (int8_t i = 0; i < 26; i++){
         string tmp = decode(s, i);
         printf("Decoded string: %s\n", tmp.c_str());
         printf("Shift: %d\n", i);    
