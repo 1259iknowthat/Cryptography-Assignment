@@ -31,4 +31,4 @@ v = vector([2, 6, 3])
 w = vector([1, 0, 0])
 u = vector([7, 7, 2])
 
-print(vector.inner((v2 - w)3, u2))
+print(vector.inner((v*2 - w)*3, u2))
