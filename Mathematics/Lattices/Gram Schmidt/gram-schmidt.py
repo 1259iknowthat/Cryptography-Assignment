@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 class vector:
 	def __init__(self,array):
 		self.coordinate=array
@@ -27,11 +28,6 @@ class vector:
 			res+=a.coordinate[i]*b.coordinate[i]
 		return res
 
-
-
-
-
-
 def gram_schmidt(u,v):
 	n=len(u)
 	for i in range(1,n):
@@ -41,29 +37,22 @@ def gram_schmidt(u,v):
 			print(i,j,res)
 		v.append(u[i]-res)
 	return v
-VECTOR_SIZE=6
-"""
+VECTOR_SIZE=4
 u1=vector([4, 1, 3, -1])
 u2=vector([2, 1, -3, 4])
 u3=vector([1, 0, -2, 7])
 u4=vector([6, 2, 9, -5])
 u=[u1,u2,u3,u4]
 v=[u1]
-"""
-u1=vector([2, 0, 0, 0, 0, 89])
-u2=vector([0, 2, 0, 0, 0, 243])
-u=[u1, u2]
+
 print(*u)
 print(*v)
+
 v=gram_schmidt(u,v)
 print(*v)
 print(round(v[3].coordinate[1],5))
 
-"""
-v2 = u2- v1*inner(u2,v1)/inner(v1,v1)
-v3 = u3 - v1*inner(u3,v1)/inner(v1,v1) - v2*inner(u3,v2)/inner(v2,v2)
-v4 = 
-"""
+
 
 
 
