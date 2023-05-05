@@ -17,7 +17,7 @@ string decode(string s, int8_t shift){
 
 void bruteforce(string s){
     printf("Brute-force's output:\n");
-    for (int8_t i = 0; i < 26; i++){
+    for (int8_t i = 1; i < 26; i++){
         string tmp = decode(s, i);
         printf("Decoded string: %s\n", tmp.c_str());
         printf("Shift: %d\n", i);    
