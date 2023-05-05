@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 from math import prod
 from gmpy2 import iroot
 from Crypto.Util.number import long_to_bytes

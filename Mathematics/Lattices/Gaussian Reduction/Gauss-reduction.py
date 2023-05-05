@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 import math
 class vector:
 	def __init__(self,array):

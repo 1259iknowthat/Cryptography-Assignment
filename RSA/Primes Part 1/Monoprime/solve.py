@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 from Crypto.Util.number import *
 f=open("output.txt",'r')
 data=f.readlines()

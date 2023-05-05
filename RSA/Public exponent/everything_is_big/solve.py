@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 from Crypto.Util.number import long_to_bytes, inverse
 import gmpy2
 from gmpy2 import mpq

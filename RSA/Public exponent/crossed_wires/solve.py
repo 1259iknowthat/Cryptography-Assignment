@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 from Crypto.Util.number import getPrime, long_to_bytes, bytes_to_long, inverse
 import random
 from math import gcd

@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 fi=open("output.txt",'r')
 public=fi.readline().strip()
 public=public[13:-1].split(', ')

@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 import math
 from sage.all import *
 from sympy.ntheory import discrete_log as discrete_log_lmao

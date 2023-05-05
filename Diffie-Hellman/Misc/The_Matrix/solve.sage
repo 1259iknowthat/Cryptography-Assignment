@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 import random
 
 def long_to_bytes(s):

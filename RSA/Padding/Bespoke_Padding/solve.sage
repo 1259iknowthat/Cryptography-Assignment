@@ -1,4 +1,4 @@
-
+#This code is contributed by tranminhprvt01
 def linearPaddingHastads(cArray,nArray,aArray,bArray,e=11,eps=1/13):
 	"""
 	Performs Hastads attack on raw RSA with no padding.

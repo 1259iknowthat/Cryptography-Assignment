@@ -1,3 +1,4 @@
+#This code is contributed by tranminhprvt01
 from Crypto.Cipher import AES
 import hashlib
 def generate_public_int(g, a, p):
